@@ -50,10 +50,3 @@ class NewtonPolynomial:
             acc += term
 
         return acc
-
-
-polynomial = NewtonPolynomial()
-polynomial.add_pivot((1, 5))
-polynomial.add_pivot((4, 4))
-polynomial.add_pivot((10, 6))
-print(polynomial(3.5))
