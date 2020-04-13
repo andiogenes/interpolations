@@ -96,8 +96,8 @@ def process_function(_args):
 
 
 def parse_command_line():
-    _parser = argparse.ArgumentParser(description='')
-    subparsers = _parser.add_subparsers(help='sub-command help')
+    __parser = argparse.ArgumentParser(description='')
+    subparsers = __parser.add_subparsers(help='sub-command help')
 
     point_parser = subparsers.add_parser('point')
     point_parser.add_argument('--source', dest='source', type=str, default='input.txt')
@@ -111,13 +111,13 @@ def parse_command_line():
     function_parser.add_argument('--annotate-points', dest='annotate_points', type=bool, default=True)
     function_parser.set_defaults(func=process_function)
 
-    return _parser
+    return __parser
 
 
 if __name__ == "__main__":
-    parser = parse_command_line()
-    args = parser.parse_args()
+    _parser = parse_command_line()
+    args = _parser.parse_args()
     try:
         args.func(args)
     except AttributeError:
-        parser.parse_args(['--help'])
+        _parser.parse_args(['--help'])
