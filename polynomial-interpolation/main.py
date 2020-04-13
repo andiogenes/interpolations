@@ -24,7 +24,7 @@ def process_points(_args):
     polynomial = NewtonPolynomial()
 
     for p in points_table:
-        polynomial.add_pivot(p)
+        polynomial.add_node(p)
 
     # Read point from the input:
     point = int(input('Enter the point where you want to calculate the function: '))
@@ -63,7 +63,7 @@ def process_function(_args):
 
     # Set up polynomial with values from table
     for p in points_table:
-        polynomial.add_pivot(p)
+        polynomial.add_node(p)
 
     # Plotting:
 

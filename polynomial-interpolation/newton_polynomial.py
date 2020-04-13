@@ -1,7 +1,7 @@
 class NewtonPolynomial:
     def __init__(self):
         self.__differences_cache = {}
-        self.__pivots = []
+        self.__nodes = []
         self.__coefs = []
 
     def __divided_differences(self, *args):
@@ -22,21 +22,21 @@ class NewtonPolynomial:
 
         return self.__differences_cache[arguments]
 
-    def __memoize_pivot(self, pivot):
-        assert isinstance(pivot, tuple)
+    def __memoize_node(self, node):
+        assert isinstance(node, tuple)
 
-        key = (pivot[0],)
-        value = pivot[1]
+        key = (node[0],)
+        value = node[1]
 
         self.__differences_cache[key] = value
 
-    def add_pivot(self, pivot):
-        assert isinstance(pivot, tuple)
+    def add_node(self, node):
+        assert isinstance(node, tuple)
 
-        self.__memoize_pivot(pivot)
-        self.__pivots.append(pivot[0])
+        self.__memoize_node(node)
+        self.__nodes.append(node[0])
 
-        dd = self.__divided_differences(*self.__pivots)
+        dd = self.__divided_differences(*self.__nodes)
         self.__coefs.append(dd)
 
     def __call__(self, x):
@@ -45,7 +45,7 @@ class NewtonPolynomial:
         for i in range(0, len(self.__coefs)):
             term = self.__coefs[i]
             for j in range(0, i):
-                term *= x - self.__pivots[j]
+                term *= x - self.__nodes[j]
 
             acc += term
 
