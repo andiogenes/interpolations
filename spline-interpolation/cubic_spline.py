@@ -2,6 +2,7 @@ from utils import tdma
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class CubicSpline:
     def __init__(self, nodes):
         self.__nodes = sorted(nodes, key=lambda x: x[0])
@@ -14,27 +15,35 @@ class CubicSpline:
         self.__calculate_coeffs()
 
     def __calculate_coeffs(self):
+        # Segments list
         h = []
 
         for i, v in enumerate(self.__nodes):
             x = v[0]
             prev_x = x if i == 0 else self.__nodes[i - 1][0]
 
+            # Fill up segments list
             h.append(x - prev_x)
 
+            # Fill up list of spline's a_i's
             self.__a.append(v[1])
 
+        # find c_i's by solving tridiagonal matrix equation system
+
+        # c_0 = 0
         tdm_a = [0]
         tdm_b = [0]
         tdm_c = [1]
         tdm_f = [0]
 
+        # Equations from page 90, (3.46), i = 1, ..., n-1
         for i in range(1, len(self.__nodes) - 1):
             tdm_a.append(h[i])
             tdm_c.append(2 * (h[i] + h[i + 1]))
             tdm_b.append(h[i + 1])
             tdm_f.append(6 * ((self.__a[i + 1] - self.__a[i]) / h[i + 1] - (self.__a[i] - self.__a[i - 1]) / h[i]))
 
+        # c_n = 0
         tdm_a.append(0)
         tdm_b.append(0)
         tdm_c.append(1)
@@ -42,8 +51,10 @@ class CubicSpline:
 
         tdm_solution = tdma(tdm_a, tdm_b, tdm_c, tdm_f)
 
+        # c_i is solution of corresponding TDM system of equations
         self.__c = tdm_solution
 
+        # calculating d_i's and b_i's
         self.__d.append(0)
         self.__b.append(0)
 
@@ -71,9 +82,8 @@ class CubicSpline:
 
 
 spline = CubicSpline([(1, 5), (4, 4), (10, 6)])
-print(spline(0))
 
-nn = np.linspace(0, 15)
+nn = np.linspace(1, 10)
 
 plt.subplots()
 
