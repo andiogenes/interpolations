@@ -1,5 +1,9 @@
+import numpy as np
+
+
 def tdma(a, b, c, f):
-    # assertions here
+    assert is_zero(a[0])
+    assert is_zero(b[len(b) - 1])
 
     alpha = [0]
     beta = [0]
@@ -16,3 +20,7 @@ def tdma(a, b, c, f):
         x[i] = alpha[i + 1] * x[i + 1] + beta[i + 1]
 
     return x
+
+
+def is_zero(v):
+    return v < np.finfo(float).eps
