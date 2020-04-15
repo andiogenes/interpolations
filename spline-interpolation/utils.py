@@ -23,4 +23,4 @@ def tdma(a, b, c, f):
 
 
 def is_zero(v):
-    return v < np.finfo(float).eps
+    return abs(v) < np.finfo(float).eps
