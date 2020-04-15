@@ -1,6 +1,4 @@
 from utils import tdma
-import numpy as np
-import matplotlib.pyplot as plt
 
 
 class CubicSpline:
@@ -79,14 +77,3 @@ class CubicSpline:
         diff = (x - self.__nodes[p][0])
 
         return self.__a[p] + self.__b[p] * diff + (self.__c[p] / 2) * (diff ** 2) + (self.__d[p] / 6) * (diff ** 3)
-
-
-spline = CubicSpline([(1, 5), (4, 4), (10, 6)])
-
-nn = np.linspace(1, 10)
-
-plt.subplots()
-
-plt.plot(nn, [spline(x) for x in nn])
-
-plt.show()
