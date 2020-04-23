@@ -42,7 +42,7 @@ def process_function(_args):
     # Read arguments table from file
     with open(_args.source, 'r', encoding='utf-8') as f:
         lines = f.readlines()
-        arguments_table = list(map(int, lines))
+        arguments_table = list(map(float, lines))
 
     # Read function expression from input and compile it in bytecode
     func_bytecode = parser.expr(str(input('Enter the function you want to calculate: '))).compile()
@@ -67,7 +67,7 @@ def process_function(_args):
 
     # Plotting:
 
-    x = np.linspace(min(arguments_table) - 1, max(arguments_table) + 1)
+    x = np.linspace(min(arguments_table), max(arguments_table), num=1000)
 
     fig, ax = plt.subplots()
 
