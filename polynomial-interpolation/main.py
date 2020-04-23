@@ -67,7 +67,7 @@ def process_function(_args):
 
     # Plotting:
 
-    x = np.linspace(min(arguments_table) - 5, max(arguments_table) + 5)
+    x = np.linspace(min(arguments_table) - 1, max(arguments_table) + 1)
 
     fig, ax = plt.subplots()
 
