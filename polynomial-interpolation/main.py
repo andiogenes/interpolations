@@ -16,7 +16,7 @@ def process_points(_args):
 
         def line_to_tuple(s):
             val = s.split(sep=',')
-            return int(val[0]), int(val[1])
+            return int(val[0]), float(val[1])
 
         points_table = list(map(line_to_tuple, lines))
 
