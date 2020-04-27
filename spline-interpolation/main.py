@@ -138,28 +138,28 @@ def process_parametric_line(_args):
     x = [_x(v) for v in original_t]
     y = [_y(v) for v in original_t]
 
-    # # t_i = i
-    # t = list(range(0, _args.points_num))
+    mode = _args.mode
 
-    # # t_i = sum delta_i
+    if mode == 0:
+        # # t_i = i
+        t = list(range(0, _args.points_num))
+    elif mode == 1:
+        # # t_i = sum delta_i
+        def t_i(_i):
+            acc = 0
+            for i in range(0, _i):
+                val = (x[i + 1] - x[i]) ** 2 + (y[i + 1] - y[i]) ** 2
+                acc += math.sqrt(val)
 
-    # def t_i(_i):
-    #     acc = 0
-    #     for i in range(0, _i):
-    #         val = (x[i + 1] - x[i]) ** 2 + (y[i + 1] - y[i]) ** 2
-    #         acc += math.sqrt(val)
-    #
-    #     return acc
-    #
-    # t = []
-    # for i in range(0, _args.points_num):
-    #     t.append(t_i(i))
+            return acc
 
-    # t = exp(i)
-    # t = list(map(lambda i: math.exp(i), range(0, _args.points_num)))
-
-    # t = 1/(i+1)
-    t = list(map(lambda i: 1 / (i + 2), range(0, _args.points_num)))
+        t = [t_i(i) for i in range(0, _args.points_num)]
+    elif mode == 2:
+        # t = exp(i)
+        t = list(map(lambda i: math.exp(i), range(0, _args.points_num)))
+    else:
+        # t = 1/(i+1)
+        t = list(map(lambda i: 1 / (i + 2), range(0, _args.points_num)))
 
     fig, ax = plt.subplots()
 
@@ -198,6 +198,7 @@ def parse_command_line():
     parametric_line_parser = subparsers.add_parser('parametric_line')
     parametric_line_parser.add_argument('--points-num', dest='points_num', type=int, default=100)
     parametric_line_parser.add_argument('--plot-dest', dest='plot_dest', type=str, default='plot.png')
+    parametric_line_parser.add_argument('--mode', dest='mode', type=int, default=0)
     parametric_line_parser.set_defaults(func=process_parametric_line)
 
     return __parser
