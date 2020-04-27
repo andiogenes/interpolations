@@ -63,6 +63,73 @@ def process_function(_args):
     fig.savefig(_args.plot_dest)
 
 
+def process_sensitivity(_args):
+    arguments_table = []
+
+    def transform_lines(v):
+        element = v.split(sep=',')
+
+        if len(element) > 1:
+            return float(element[0]), float(element[1])
+        else:
+            return float(element[0])
+
+    # Read arguments table from file
+    with open(_args.source, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        arguments_table = list(map(transform_lines, lines))
+
+    # Read function expression from input and compile it in bytecode
+    func_bytecode = parser.expr(str(input('Enter the function you want to calculate: '))).compile()
+
+    # Wrapper that evaluates bytecode with given 'x' in local environment
+    def func(x):
+        return eval(func_bytecode, globals(), {'x': x})
+
+    # Generate table for given function
+    points_table = [x if isinstance(x, tuple) else (x, func(x)) for x in arguments_table]
+
+    # Set up polynomial with values from table
+    polynomial = CubicSpline(points_table)
+
+    # Plotting:
+    def extract_x(x):
+        return x[0] if isinstance(x, tuple) else x
+
+    x = np.linspace(
+        extract_x(min(arguments_table, key=extract_x)),
+        extract_x(max(arguments_table, key=extract_x)),
+        num=1000
+    )
+
+    fig, ax = plt.subplots()
+
+    # Draw plot of y=f(x)
+    ax.plot(x, [func(x1) for x1 in x], label='original function')
+    # Draw plot of Newton polynomial
+    ax.plot(x, [polynomial(x1) for x1 in x], label='spline')
+
+    # Mark arguments
+    for x in arguments_table:
+        pos = x[0] if isinstance(x, tuple) else x
+        ax.axvline(x=pos, linestyle='--', color='green')
+
+    # Mark points where y=f(x) and p(x) are equal
+    for (x, y) in points_table:
+        ax.scatter(x, y, color='purple')
+
+    ax.grid()
+
+    plt.legend()
+    plt.show()
+
+    fig.savefig(_args.plot_dest)
+
+
+def process_parametric_line(_args):
+    pass
+
+
 def parse_command_line():
     __parser = argparse.ArgumentParser(description='')
     subparsers = __parser.add_subparsers(help='sub-command help')
@@ -71,8 +138,13 @@ def parse_command_line():
     function_parser.add_argument('--source', dest='source', type=str, default='values.txt')
     function_parser.add_argument('--dest', dest='dest', type=str, default='result.txt')
     function_parser.add_argument('--plot-dest', dest='plot_dest', type=str, default='plot.png')
-    function_parser.add_argument('--annotate-points', dest='annotate_points', type=bool, default=True)
+    function_parser.add_argument('--annotate-points', dest='annotate_points', type=bool, default=False)
     function_parser.set_defaults(func=process_function)
+
+    sensitivity_parser = subparsers.add_parser('sensitivity')
+    sensitivity_parser.add_argument('--source', dest='source', type=str, default='values.txt')
+    sensitivity_parser.add_argument('--plot-dest', dest='plot_dest', type=str, default='plot.png')
+    sensitivity_parser.set_defaults(func=process_sensitivity)
 
     return __parser
 
