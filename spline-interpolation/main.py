@@ -93,6 +93,7 @@ def process_sensitivity(_args):
     polynomial = CubicSpline(points_table)
 
     # Plotting:
+
     def extract_x(x):
         return x[0] if isinstance(x, tuple) else x
 
@@ -127,7 +128,55 @@ def process_sensitivity(_args):
 
 
 def process_parametric_line(_args):
-    pass
+    def _x(v):
+        return math.cos(v * 6) * math.cos(v)
+
+    def _y(v):
+        return math.cos(v * 6) * math.sin(v)
+
+    original_t = np.linspace(0, math.pi * 2, num=_args.points_num)
+    x = [_x(v) for v in original_t]
+    y = [_y(v) for v in original_t]
+
+    # # t_i = i
+    # t = list(range(0, _args.points_num))
+
+    # # t_i = sum delta_i
+
+    # def t_i(_i):
+    #     acc = 0
+    #     for i in range(0, _i):
+    #         val = (x[i + 1] - x[i]) ** 2 + (y[i + 1] - y[i]) ** 2
+    #         acc += math.sqrt(val)
+    #
+    #     return acc
+    #
+    # t = []
+    # for i in range(0, _args.points_num):
+    #     t.append(t_i(i))
+
+    # t = exp(i)
+    # t = list(map(lambda i: math.exp(i), range(0, _args.points_num)))
+
+    # t = 1/(i+1)
+    t = list(map(lambda i: 1 / (i + 2), range(0, _args.points_num)))
+
+    fig, ax = plt.subplots()
+
+    x_spline = CubicSpline(zip(t, x))
+    y_spline = CubicSpline(zip(t, y))
+
+    domain = np.linspace(min(t), max(t), num=1000)
+
+    ax.plot([x_spline(v) for v in domain], [y_spline(v) for v in domain])
+    ax.grid()
+
+    for (x, y) in zip(x, y):
+        ax.scatter(x, y, color='purple')
+
+    plt.show()
+
+    fig.savefig(_args.plot_dest)
 
 
 def parse_command_line():
@@ -145,6 +194,11 @@ def parse_command_line():
     sensitivity_parser.add_argument('--source', dest='source', type=str, default='values.txt')
     sensitivity_parser.add_argument('--plot-dest', dest='plot_dest', type=str, default='plot.png')
     sensitivity_parser.set_defaults(func=process_sensitivity)
+
+    parametric_line_parser = subparsers.add_parser('parametric_line')
+    parametric_line_parser.add_argument('--points-num', dest='points_num', type=int, default=100)
+    parametric_line_parser.add_argument('--plot-dest', dest='plot_dest', type=str, default='plot.png')
+    parametric_line_parser.set_defaults(func=process_parametric_line)
 
     return __parser
 
