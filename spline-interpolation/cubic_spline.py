@@ -5,6 +5,7 @@ class CubicSpline:
     def __init__(self, nodes):
         self.__nodes = sorted(nodes, key=lambda x: x[0])
 
+        # Coefficients of S_i
         self.__a = []
         self.__b = []
         self.__c = []
@@ -13,6 +14,9 @@ class CubicSpline:
         self.__calculate_coeffs()
 
     def __calculate_coeffs(self):
+        """
+        Calculates spline coefficients.
+        """
         # Segments list
         h = []
 
@@ -62,12 +66,17 @@ class CubicSpline:
                 (h[i] / 2) * tdm_solution[i] - ((h[i] ** 2) / 6) * self.__d[i] + (self.__a[i] - self.__a[i - 1]) / h[i])
 
     def __call__(self, x):
+        """
+        Calculates S(x).
+        """
+        # Choose segment of interpolation
         p = -1
         for i, v in enumerate(self.__nodes):
             if x <= v[0]:
                 p = i
                 break
 
+        # if point x is out of interpolation bounds, just return some value
         if p == -1:
             return self.__nodes[len(self.__nodes) - 1][1]
 
