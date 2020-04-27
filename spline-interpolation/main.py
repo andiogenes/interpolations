@@ -157,9 +157,11 @@ def process_parametric_line(_args):
     elif mode == 2:
         # t = exp(i)
         t = list(map(lambda i: math.exp(i), range(0, _args.points_num)))
-    else:
+    elif mode == 3:
         # t = 1/(i+1)
         t = list(map(lambda i: 1 / (i + 2), range(0, _args.points_num)))
+    else:
+        t = original_t
 
     fig, ax = plt.subplots()
 
@@ -198,7 +200,7 @@ def parse_command_line():
     parametric_line_parser = subparsers.add_parser('parametric_line')
     parametric_line_parser.add_argument('--points-num', dest='points_num', type=int, default=100)
     parametric_line_parser.add_argument('--plot-dest', dest='plot_dest', type=str, default='plot.png')
-    parametric_line_parser.add_argument('--mode', dest='mode', type=int, default=0)
+    parametric_line_parser.add_argument('--mode', dest='mode', type=int, default=-1)
     parametric_line_parser.set_defaults(func=process_parametric_line)
 
     return __parser
