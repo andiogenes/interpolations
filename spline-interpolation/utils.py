@@ -2,6 +2,14 @@ import numpy as np
 
 
 def tdma(a, b, c, f):
+    """
+    Solves system of linear equations with tridiagonal matrix.
+    :param a: diagonal that lies below main diagonal
+    :param b: diagonal that lies above main diagonal
+    :param c: main diagonal
+    :param f: free terms
+    :return: solution of system
+    """
     assert is_zero(a[0])
     assert is_zero(b[len(b) - 1])
 
