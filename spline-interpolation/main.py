@@ -42,7 +42,7 @@ def process_function(_args):
     # Draw plot of y=f(x)
     ax.plot(x, [func(x1) for x1 in x], label='original function')
     # Draw plot of Newton polynomial
-    ax.plot(x, [polynomial(x1) for x1 in x], label='polynomial')
+    ax.plot(x, [polynomial(x1) for x1 in x], label='spline')
 
     # Mark arguments
     for x in arguments_table:
